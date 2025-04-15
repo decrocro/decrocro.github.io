@@ -1,111 +1,205 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Timetable Scheduler</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
-        h1 {
-            text-align: center;
-            color: #35424a;
-        }
-        form {
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        input, select {
-            padding: 10px;
-            margin: 5px;
-            width: 200px;
-        }
-        button {
-            padding: 10px 15px;
-            background-color: #35424a;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #2c3e50;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: center;
-        }
-        th {
-            background-color: #35424a;
-            color: white;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Timetable Scheduler</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      background-color: #f8f9fa;
+      color: #2c3e50;
+    }
+    .container {
+      max-width: 100%;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-weight: 300;
+    }
+    .table-wrapper {
+      overflow-x: auto;
+    }
+    table {
+      width: max-content;
+      border-collapse: collapse;
+      background: white;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+      border-radius: 8px;
+      overflow: hidden;
+      min-width: 1000px;
+    }
+    th, td {
+      padding: 10px;
+      text-align: center;
+      border: 1px solid #ecf0f1;
+    }
+    th {
+      background-color: #3498db;
+      color: white;
+      font-weight: 500;
+      min-width: 100px;
+    }
+    .day-column {
+      background-color: #2c3e50;
+      color: white;
+      font-weight: bold;
+      min-width: 120px;
+    }
+    textarea {
+      width: 100%;
+      height: 60px;
+      padding: 6px;
+      border: 1px solid #bdc3c7;
+      border-radius: 4px;
+      resize: vertical;
+      font-family: inherit;
+      transition: all 0.3s ease;
+    }
+    textarea:focus {
+      border-color: #3498db;
+      box-shadow: 0 0 0 3px rgba(52,152,219,0.1);
+      outline: none;
+    }
+    .btn-group {
+      text-align: center;
+      margin-top: 25px;
+    }
+    .save-btn, .clear-btn {
+      padding: 10px 25px;
+      margin: 0 10px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+    .save-btn:hover, .clear-btn:hover {
+      background-color: #2980b9;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(52,152,219,0.3);
+    }
+    .clear-btn {
+      background-color: #e74c3c;
+    }
+    .clear-btn:hover {
+      background-color: #c0392b;
+    }
+  </style>
 </head>
 <body>
+  <div class="container">
+    <h1>Weekly Schedule Planner</h1>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th class="day-column">Day \ Time</th>
+            <!-- Time headers -->
+          </tr>
+        </thead>
+        <tbody>
+          <!-- JavaScript generates table -->
+        </tbody>
+      </table>
+    </div>
 
-<h1>Timetable Scheduler</h1>
+    <div class="btn-group">
+      <button class="save-btn">Save Schedule</button>
+      <button class="clear-btn">Clear Schedule</button>
+    </div>
+  </div>
 
-<form id="scheduleForm">
-    <select id="day" required>
-        <option value="" disabled selected>Select Day</option>
-        <option value="Monday">Monday</option>
-        <option value="Tuesday">Tuesday</option>
-        <option value="Wednesday">Wednesday</option>
-        <option value="Thursday">Thursday</option>
-        <option value="Friday">Friday</option>
-        <option value="Saturday">Saturday</option>
-        <option value="Sunday">Sunday</option>
-    </select>
-    <input type="time" id="time" required>
-    <input type="text" id="activity" placeholder="Activity" required>
-    <button type="submit">Add to Timetable</button>
-</form>
+  <script>
+    const times = [
+      "7:30 AM", "8:30 AM", "9:30 AM", "10:30 AM",
+      "11:30 AM", "12:30 PM", "1:30 PM", "2:30 PM",
+      "3:30 PM", "4:30 PM", "5:30 PM", "6:30 PM",
+      "7:30 PM", "8:30 PM", "9:30 PM", "10:30 PM"
+    ];
 
-<table id="timetable">
-    <thead>
-        <tr>
-            <th>Day</th>
-            <th>Time</th>
-            <th>Activity</th>
-        </tr>
-    </thead>
-    <tbody>
-        <!-- Scheduled activities will be added here -->
-    </tbody>
-</table>
+    const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
-<script>
-    document.getElementById('scheduleForm').addEventListener('submit', function(event) {
-        event.preventDefault();
+    const table = document.querySelector("table");
+    const theadRow = table.querySelector("thead tr");
 
-        const day = document.getElementById('day').value;
-        const time = document.getElementById('time').value;
-        const activity = document.getElementById('activity').value;
-
-        const tableBody = document.getElementById('timetable').querySelector('tbody');
-        const newRow = document.createElement('tr');
-
-        newRow.innerHTML = `
-            <td>${day}</td>
-            <td>${time}</td>
-            <td>${activity}</td>
-        `;
-
-        tableBody.appendChild(newRow);
-
-        // Clear the form fields
-        document.getElementById('scheduleForm').reset();
+    // Add time headers
+    times.forEach(time => {
+      const th = document.createElement("th");
+      th.textContent = time;
+      theadRow.appendChild(th);
     });
-</script>
 
+    const tbody = table.querySelector("tbody");
+
+    // Generate table body
+    days.forEach(day => {
+      const row = document.createElement("tr");
+
+      const dayCell = document.createElement("td");
+      dayCell.classList.add("day-column");
+      dayCell.textContent = day;
+      row.appendChild(dayCell);
+
+      times.forEach(time => {
+        const td = document.createElement("td");
+        const textarea = document.createElement("textarea");
+        textarea.dataset.day = day;
+        textarea.dataset.time = time;
+        td.appendChild(textarea);
+        row.appendChild(td);
+      });
+
+      tbody.appendChild(row);
+    });
+
+    // Save function
+    function saveSchedule() {
+      const schedule = {};
+      document.querySelectorAll("textarea").forEach(textarea => {
+        const { day, time, value } = textarea.dataset;
+        if (!schedule[day]) schedule[day] = {};
+        schedule[day][time] = textarea.value;
+      });
+      localStorage.setItem("schedule", JSON.stringify(schedule));
+    }
+
+    // Load function
+    window.addEventListener("load", () => {
+      const saved = JSON.parse(localStorage.getItem("schedule"));
+      if (saved) {
+        document.querySelectorAll("textarea").forEach(textarea => {
+          const { day, time } = textarea.dataset;
+          textarea.value = saved[day]?.[time] || "";
+        });
+      }
+    });
+
+    // Auto-save
+    document.addEventListener("input", event => {
+      if (event.target.tagName === "TEXTAREA") {
+        saveSchedule();
+      }
+    });
+
+    // Manual save
+    document.querySelector(".save-btn").addEventListener("click", () => {
+      saveSchedule();
+      alert("Schedule saved!");
+    });
+
+    // Clear
+    document.querySelector(".clear-btn").addEventListener("click", () => {
+      if (confirm("Clear all schedule data?")) {
+        localStorage.removeItem("schedule");
+        document.querySelectorAll("textarea").forEach(t => t.value = "");
+      }
+    });
+  </script>
 </body>
 </html>
