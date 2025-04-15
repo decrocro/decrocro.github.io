@@ -3,99 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Machine Learning Project</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Timetable Scheduler</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 0;
+            padding: 20px;
             background-color: #f4f4f4;
         }
-        header {
-            background: #35424a;
-            color: #ffffff;
-            padding: 20px 0;
+        h1 {
             text-align: center;
-        }
-        nav {
-            margin: 20px 0;
-        }
-        nav a {
-            color: #ffffff;
-            margin: 0 15px;
-            text-decoration: none;
-        }
-        .container {
-            width: 80%;
-            margin: auto;
-            overflow: hidden;
-            padding: 20px;
-            background: #ffffff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        h1, h2, h3 {
             color: #35424a;
         }
-        footer {
+        form {
+            margin-bottom: 20px;
             text-align: center;
-            padding: 20px 0;
-            background: #35424a;
-            color: #ffffff;
-            position: relative;
-            bottom: 0;
+        }
+        input, select {
+            padding: 10px;
+            margin: 5px;
+            width: 200px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #35424a;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #2c3e50;
+        }
+        table {
             width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #35424a;
+            color: white;
         }
     </style>
 </head>
 <body>
 
-<header>
-    <h1>My Machine Learning Project</h1>
-    <nav>
-        <a href="#about">About</a>
-        <a href="#installation">Installation</a>
-        <a href="#usage">Usage</a>
-        <a href="#contributing">Contributing</a>
-        <a href="#license">License</a>
-    </nav>
-</header>
+<h1>Timetable Scheduler</h1>
 
-<div class="container">
-    <section id="about">
-        <h2>About</h2>
-        <p>This project is a machine learning application that aims to solve [insert problem]. It uses [insert algorithms/techniques] to achieve [insert goals].</p>
-    </section>
+<form id="scheduleForm">
+    <select id="day" required>
+        <option value="" disabled selected>Select Day</option>
+        <option value="Monday">Monday</option>
+        <option value="Tuesday">Tuesday</option>
+        <option value="Wednesday">Wednesday</option>
+        <option value="Thursday">Thursday</option>
+        <option value="Friday">Friday</option>
+        <option value="Saturday">Saturday</option>
+        <option value="Sunday">Sunday</option>
+    </select>
+    <input type="time" id="time" required>
+    <input type="text" id="activity" placeholder="Activity" required>
+    <button type="submit">Add to Timetable</button>
+</form>
 
-    <section id="installation">
-        <h2>Installation</h2>
-        <p>To install this project, follow these steps:</p>
-        <pre><code>git clone https://github.com/username/repo.git
-cd repo
-pip install -r requirements.txt</code></pre>
-    </section>
+<table id="timetable">
+    <thead>
+        <tr>
+            <th>Day</th>
+            <th>Time</th>
+            <th>Activity</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Scheduled activities will be added here -->
+    </tbody>
+</table>
 
-    <section id="usage">
-        <h2>Usage</h2>
-        <p>To use this project, run the following command:</p>
-        <pre><code>python main.py</code></pre>
-        <p>For more detailed instructions, refer to the documentation.</p>
-    </section>
+<script>
+    document.getElementById('scheduleForm').addEventListener('submit', function(event) {
+        event.preventDefault();
 
-    <section id="contributing">
-        <h2>Contributing</h2>
-        <p>We welcome contributions! Please read our <a href="CONTRIBUTING.md">contributing guidelines</a> for more information.</p>
-    </section>
+        const day = document.getElementById('day').value;
+        const time = document.getElementById('time').value;
+        const activity = document.getElementById('activity').value;
 
-    <section id="license">
-        <h2>License</h2>
-        <p>This project is licensed under the MIT License. See the <a href="LICENSE">LICENSE</a> file for details.</p>
-    </section>
-</div>
+        const tableBody = document.getElementById('timetable').querySelector('tbody');
+        const newRow = document.createElement('tr');
 
-<footer>
-    <p>&copy; 2023 My Machine Learning Project. All rights reserved.</p>
-</footer>
+        newRow.innerHTML = `
+            <td>${day}</td>
+            <td>${time}</td>
+            <td>${activity}</td>
+        `;
+
+        tableBody.appendChild(newRow);
+
+        // Clear the form fields
+        document.getElementById('scheduleForm').reset();
+    });
+</script>
 
 </body>
 </html>
